@@ -1,0 +1,27 @@
+@import './dimensions.scss';
+
+.grid-1fr-1fr {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+
+  &.gap-huge {
+    column-gap: $huge;
+  }
+
+  &.gap-large {
+    column-gap: $large;
+  }
+
+  &.gap-normal {
+    column-gap: $normal;
+  }
+
+  &.gap-small {
+    column-gap: $small;
+  }
+
+  &.gap-tiny {
+    column-gap: $tiny;
+  }
+}

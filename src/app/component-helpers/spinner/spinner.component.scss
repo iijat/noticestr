@@ -1,0 +1,22 @@
+@use '@angular/material' as mat;
+@import '../../../styles/material.scss';
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation-name: spin;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+
+  font-size: 40px;
+
+  color: mat.get-color-from-palette($primary, 400);
+}

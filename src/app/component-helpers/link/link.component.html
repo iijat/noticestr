@@ -1,0 +1,12 @@
+<span>{{ name }}</span>
+<mat-icon
+  fontSet="material-symbols-outlined"
+  class="icon"
+  (click)="onClick()"
+  [matTooltip]="tooltip ?? 'na'"
+  [matTooltipDisabled]="!tooltip"
+  [matTooltipPosition]="'above'"
+  matTooltipClass="tooltip"
+>
+  open_in_new
+</mat-icon>

@@ -1,0 +1,55 @@
+<div class="brand" (click)="onClickBrand()">
+  <span class="clr-green front">NOTICE</span>
+  <span>STR</span>
+  <span class="version">v {{ version }}</span>
+</div>
+
+<a class="menu" routerLink="nostr-people-lists" routerLinkActive="menu-active">
+  Nostr People Lists
+</a>
+<a class="menu" routerLink="messages" routerLinkActive="menu-active">
+  Messages
+</a>
+
+<div class="flex-grow-1 flex-column-reverse"></div>
+<div class="relays-box mat-body">
+  <div
+    *ngFor="
+      let relay of mainService.nostrManager?.nostrRelayer?.relays | keyvalue
+    "
+    class="relay-line"
+  >
+    <span
+      class="material-symbols-outlined font-size-18"
+      [class.clr-accent]="relay.value.status === 0"
+      [class.clr-green]="relay.value.status === 1"
+      [class.clr-accent]="relay.value.status === 2"
+      [class.clr-warn]="relay.value.status === 3"
+    >
+      radio_button_checked
+    </span>
+    <span>{{ sakService.getReadableRelayUrl(relay.key) }}</span>
+    <span class="flex-grow-1"></span>
+    <app-info style="font-size: 20px" class="info-icon">
+      <div
+        style="
+          white-space: pre;
+          max-height: 400px;
+          overflow-y: auto;
+          font-size: 12px;
+        "
+      >
+        <code>
+          {{
+            mainService.nostrManager?.nostrRelayer?.nip11RIDs?.get(relay.key)
+              | json
+          }}
+        </code>
+      </div>
+    </app-info>
+  </div>
+</div>
+<app-user
+  [pubkey]="mainService.myPubkey"
+  style="margin: 16px 0 16px 16px"
+></app-user>

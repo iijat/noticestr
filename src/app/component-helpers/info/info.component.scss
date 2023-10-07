@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  height: fit-content;
+
+  .info {
+    font-size: inherit;
+    cursor: help;
+  }
+}

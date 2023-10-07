@@ -1,0 +1,15 @@
+<span
+  class="material-symbols-outlined info clr-green"
+  #popoverTrigger="mtxPopoverTrigger"
+  [mtxPopoverTriggerFor]="infoPopover"
+>
+  info
+</span>
+
+<mtx-popover #infoPopover="mtxPopover" [position]="[positionStart, 'center']">
+  <ng-template mtxPopoverContent let-name="name">
+    <div class="flex-column">
+      <ng-content></ng-content>
+    </div>
+  </ng-template>
+</mtx-popover>

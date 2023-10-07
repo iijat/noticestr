@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Please Confirm</h1>
+
+<mat-dialog-content>
+  <div [innerHTML]="data.text"></div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close(false)">CANCEL</button>
+
+  <button mat-flat-button color="primary" (click)="close(true)">OK</button>
+</mat-dialog-actions>

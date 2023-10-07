@@ -1,0 +1,18 @@
+@use '@angular/material' as mat;
+@import './material.scss';
+
+.clr-green {
+  color: mat.get-color-from-palette($primary, 400);
+}
+
+.clr-green-200 {
+  color: mat.get-color-from-palette($primary, 200);
+}
+
+.clr-warn {
+  color: mat.get-color-from-palette($warn, 400);
+}
+
+.clr-accent {
+  color: mat.get-color-from-palette($accent, 700);
+}

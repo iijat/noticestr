@@ -1,0 +1,221 @@
+<ng-template
+  #listItems
+  let-list="list"
+  let-pubkeys="pubkeys"
+  let-isPrivate="isPrivate"
+>
+  <div
+    *ngFor="let p of pubkeys; let first = first"
+    class="user-item"
+    [class.user-item-selected]="selected.get(list.listName + p)"
+    style="padding-top: 2px; padding-bottom: 2px"
+  >
+    <!-- <app-nostr-user [pubkey]="p" [isPrivate]="isPrivate"></app-nostr-user> -->
+    <app-user #nostrUser [pubkey]="p"></app-user>
+    <div class="dense-2 font-size-12 ml-normal">
+      <mat-chip *ngIf="isPrivate">private</mat-chip>
+    </div>
+
+    <div class="flex-grow-1"></div>
+
+    <div class="action-buttons">
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="
+          isPrivate ? list.deletePrivatePubkey(p) : list.deletePublicPubkey(p)
+        "
+      >
+        <span class="material-symbols-outlined"> close </span>
+      </button>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        (click)="selected.set(list.listName + p, true)"
+      >
+        <span class="material-symbols-outlined"> more_vert </span>
+      </button>
+      <mat-menu
+        #menu="matMenu"
+        (closed)="selected.set(list.listName + p, false)"
+      >
+        <button mat-menu-item (click)="copyNpubToClipboard(p)">
+          Copy Pubkey <b>(NPUB)</b>
+        </button>
+        <button mat-menu-item (click)="copyHexToClipboard(p)">
+          Copy Pubkey <b>(HEX)</b>
+        </button>
+        <button
+          *ngIf="mainService.metadata.get(p)?.confirmedNip05"
+          mat-menu-item
+          (click)="copyNip05ToClipboard(p)"
+        >
+          Copy Nostr Address <b>(NIP-05)</b>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</ng-template>
+
+<app-toolbar>
+  <div class="flex-grow-1"></div>
+  <button
+    mat-flat-button
+    color="primary"
+    class=""
+    (click)="onClickNewPeopleList()"
+  >
+    <mat-icon fontSet="material-symbols-outlined"> add_circle </mat-icon>
+    <span>NEW LIST</span>
+  </button>
+</app-toolbar>
+
+<div class="main">
+  <ng-container *ngIf="mainService.myPubkey">
+    <app-card
+      *ngFor="
+        let list of mainService.peopleLists.get(mainService.myPubkey);
+        let i = index
+      "
+      [class.mt-normal]="i > 0"
+      class="padding"
+    >
+      <div class="flex-column">
+        <div class="flex-row align-items-center">
+          <button mat-icon-button (click)="expanded.set(i, !expanded.get(i))">
+            <span class="material-symbols-outlined">
+              {{ expanded.get(i) ? 'expand_more' : 'chevron_right ' }}
+            </span>
+          </button>
+
+          <span
+            class="ml-tiny fw500 mr-large"
+            [mtxPopoverTriggerFor]="popoverListName"
+          >
+            {{ list.listName }}
+          </span>
+          <mtx-popover
+            #popoverListName="mtxPopover"
+            [position]="['below', 'center']"
+            [closeOnBackdropClick]="true"
+          >
+            <!-- <ng-template mtxPopoverContent let-relays="relays"> -->
+            <div style="max-width: 300px" class="flex-column">
+              Published on
+              <ul>
+                <li
+                  *ngFor="
+                    let relayEvent of mainService.nostrManager?.nostrRelayer?.cache?.events?.get(
+                      list.relayEvent.event.id
+                    ) ?? []
+                  "
+                >
+                  {{ sakService.getReadableRelayUrl(relayEvent.url) }}
+                </li>
+              </ul>
+            </div>
+            <!-- </ng-template> -->
+          </mtx-popover>
+
+          <div
+            *ngIf="list.hasUnsafedChanges"
+            class="flex-row gap-normal align-items-center mr-normal"
+          >
+            <div class="clr-warn">unpublished changes</div>
+
+            <button
+              mat-stroked-button
+              color="warn"
+              [mtxPopoverTriggerFor]="popoverPublish"
+              [mtxPopoverTriggerData]="{ relays: mainService.myRelays }"
+              (click)="publish(list)"
+            >
+              PUBLISH
+            </button>
+            <mtx-popover
+              #popoverPublish="mtxPopover"
+              [position]="['below', 'center']"
+              [closeOnBackdropClick]="true"
+            >
+              <ng-template mtxPopoverContent let-relays="relays">
+                <div style="max-width: 300px" class="flex-column">
+                  The list will be published to the following relays:
+                  <ul>
+                    <li *ngFor="let relay of relays">{{ relay }}</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </mtx-popover>
+
+            <button mat-stroked-button (click)="list.resetChanges()">
+              RESET
+            </button>
+          </div>
+
+          <div
+            class="flex-grow-1 flex-row-reverse align-items-center gap-normal"
+          >
+            <button mat-icon-button [matMenuTriggerFor]="listMenu">
+              <mat-icon fontSet="material-symbols-outlined">more_vert</mat-icon>
+            </button>
+            <mat-menu #listMenu="matMenu">
+              <button mat-menu-item (click)="delete(list)">Delete List</button>
+            </mat-menu>
+
+            <button mat-stroked-button>ADD PEOPLE</button>
+          </div>
+        </div>
+
+        <ng-container *ngIf="expanded.get(i)">
+          <!-- PRIVATE PUBKEYS -->
+          <!-- NO CHANGES -->
+          <ng-container *ngIf="!list.hasUnsafedPrivatePubkeys">
+            <ng-container
+              [ngTemplateOutlet]="listItems"
+              [ngTemplateOutletContext]="{
+                list: list,
+                pubkeys: list.privatePubkeys,
+                isPrivate: true
+              }"
+            ></ng-container>
+          </ng-container>
+          <!-- UNSAFED CHANGES -->
+          <ng-container *ngIf="list.hasUnsafedPrivatePubkeys">
+            <ng-container
+              [ngTemplateOutlet]="listItems"
+              [ngTemplateOutletContext]="{
+                list: list,
+                pubkeys: list.unsafedPrivatePubkeys,
+                isPrivate: true
+              }"
+            ></ng-container>
+          </ng-container>
+
+          <!-- PUBLIC PUBKEYS -->
+          <!-- NO CHANGES -->
+          <ng-container *ngIf="!list.hasUnsafedPublicPubkeys">
+            <ng-container
+              [ngTemplateOutlet]="listItems"
+              [ngTemplateOutletContext]="{
+                list: list,
+                pubkeys: list.publicPubkeys,
+                isPrivate: false
+              }"
+            ></ng-container>
+          </ng-container>
+          <!-- UNSAFED CHAGES -->
+          <ng-container *ngIf="list.hasUnsafedPublicPubkeys">
+            <ng-container
+              [ngTemplateOutlet]="listItems"
+              [ngTemplateOutletContext]="{
+                list: list,
+                pubkeys: list.unsafedPublicPubkeys,
+                isPrivate: false
+              }"
+            ></ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </app-card>
+  </ng-container>
+</div>

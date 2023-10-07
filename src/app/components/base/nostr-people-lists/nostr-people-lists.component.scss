@@ -1,0 +1,48 @@
+@use '@angular/material' as mat;
+@import '../../../../styles/material.scss';
+
+:host {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+}
+
+.main {
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-item {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+
+  .action-buttons {
+    margin-right: 4px;
+    visibility: hidden;
+    display: flex;
+    flex-direction: row;
+    column-gap: 4px;
+  }
+
+  &:hover {
+    background-color: mat.get-color-from-palette($primary, 200);
+
+    .action-buttons {
+      visibility: visible;
+    }
+  }
+}
+
+.user-item-selected {
+  background-color: mat.get-color-from-palette($primary, 200);
+}

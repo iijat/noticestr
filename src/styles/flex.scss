@@ -1,0 +1,93 @@
+@import './dimensions.scss';
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+
+  &.gap-huge {
+    row-gap: $huge;
+  }
+
+  &.gap-large {
+    row-gap: $large;
+  }
+
+  &.gap-normal {
+    row-gap: $normal;
+  }
+
+  &.gap-small {
+    row-gap: $small;
+  }
+
+  &.gap-tiny {
+    row-gap: $tiny;
+  }
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+
+  &.gap-huge {
+    column-gap: $huge;
+  }
+
+  &.gap-large {
+    column-gap: $large;
+  }
+
+  &.gap-normal {
+    column-gap: $normal;
+  }
+
+  &.gap-small {
+    column-gap: $small;
+  }
+
+  &.gap-tiny {
+    column-gap: $tiny;
+  }
+}
+
+.flex-row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+
+  &.gap-huge {
+    column-gap: $huge;
+  }
+
+  &.gap-large {
+    column-gap: $large;
+  }
+
+  &.gap-normal {
+    column-gap: $normal;
+  }
+
+  &.gap-small {
+    column-gap: $small;
+  }
+
+  &.gap-tiny {
+    column-gap: $tiny;
+  }
+}
+
+.align-self-start {
+  align-self: flex-start;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.flex-column-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}

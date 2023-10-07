@@ -1,0 +1,23 @@
+<mat-dialog-content>
+  <div class="flex-column dense-2">
+    <span>
+      Please configure an initial relay. We will read your metadata from this
+      relay as well as your preferred relays (NIP-65).
+    </span>
+
+    <div class="mt-normal grid-1fr-1fr gap-normal">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Initial Relay</mat-label>
+        <input matInput [(ngModel)]="relay" />
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        style="height: 100%"
+        (click)="onClickGo()"
+      >
+        GO
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>

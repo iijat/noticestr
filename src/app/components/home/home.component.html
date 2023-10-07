@@ -1,0 +1,88 @@
+<div class="main">
+  <div class="brand mt-large" (click)="onClickBrand()">
+    <span class="clr-green brand-front">NOTICE</span>
+    <span class="brand-back">STR</span>
+  </div>
+
+  <span class="title mt-huge">
+    Easily send a message to <br />
+    all members of a Nostr list
+  </span>
+
+  <span class="mt-large sub-title">
+    Create messages, manage your recipient lists, and send<br />
+    messages to all members of a list via the nostr network.
+  </span>
+
+  <div
+    *ngIf="!showNip46; else nip46Area"
+    class="align-self-start flex-row mt-large align-items-center gap-normal"
+  >
+    <button
+      mat-flat-button
+      [disabled]="!nostrService.isNip07Available"
+      color="primary"
+      (click)="onClickLoginViaNip07()"
+    >
+      Login via Browser Extension
+    </button>
+
+    <span>or</span>
+
+    <button mat-flat-button color="primary" (click)="onClickLoginViaNip46()">
+      Login via Remote Signer
+    </button>
+  </div>
+
+  <ng-template #nip46Area>
+    <span class="mt-large light">
+      To get started, scan the Nostr Connect URI with your remote signer
+      (e.g.<br />
+      <a class="link" href="https://delegation.monster" target="_blank"
+        >https://delegation.monster</a
+      >), or click on the QR code to copy the URI to the clipboard.
+    </span>
+
+    <qrcode
+      style="min-height: 256px"
+      [qrdata]="nostrService.nip46AppUriString"
+      [width]="256"
+      [errorCorrectionLevel]="'M'"
+      class="mt-small align-self-start cursor-pointer"
+      matRipple
+      (click)="onClickQRCode()"
+    >
+    </qrcode>
+
+    <button mat-icon-button (click)="showNip46Details = !showNip46Details">
+      <span *ngIf="!showNip46Details" class="material-symbols-outlined">
+        expand_more
+      </span>
+      <span *ngIf="showNip46Details" class="material-symbols-outlined">
+        expand_less
+      </span>
+    </button>
+
+    <mat-card *ngIf="showNip46Details">
+      <mat-card-content>
+        <div class="flex-column dense-2">
+          <span class="light">
+            The connection to the remote signer will be established via the
+            relay below. If the relay is not working for you, try another one.
+          </span>
+
+          <div class="mt-normal grid-1fr-1fr align-items-center gap-large">
+            <mat-form-field subscriptSizing="dynamic" appearance="outline">
+              <mat-label>Relay</mat-label>
+              <input matInput [(ngModel)]="nostrService.nip46AppRelay" />
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" style="height: 100%">
+              GENERATE NEW URI
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+</div>

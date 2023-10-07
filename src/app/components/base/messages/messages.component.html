@@ -1,0 +1,30 @@
+<div class="header">
+  <button mat-flat-button color="primary" (click)="newMessage()">
+    New Message
+  </button>
+</div>
+
+<mtx-split [restrictMove]="true">
+  <mtx-split-pane [size]="25">
+    <div class="flex-column">
+      <div *ngFor="let item of messages?.items | keyvalue">
+        {{ item.key }}
+      </div>
+    </div>
+  </mtx-split-pane>
+  <mtx-split-pane [size]="75">
+    <div class="right">
+      <router-outlet></router-outlet>
+    </div>
+  </mtx-split-pane>
+</mtx-split>
+
+<!-- <div *ngFor="let item of messages?.items | keyvalue">
+  {{ item.key }}
+</div>
+
+<div *ngIf="loading; else notLoadingElement" class="loading">
+  <app-spinner></app-spinner>
+</div>
+
+<ng-template #notLoadingElement>LOADING FINISHED</ng-template> -->

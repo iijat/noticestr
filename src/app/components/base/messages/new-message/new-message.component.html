@@ -1,0 +1,24 @@
+<ng-template #toTemplate let-toObject="toObject">
+  <div>Hi {{ toObject.nip05 }}</div>
+</ng-template>
+
+<div class="row-1">
+  <button mat-stroked-button color="primary" class="mr-normal">To</button>
+
+  <div class="flex-row gap-small">
+    <ng-container *ngFor="let to of toObjects">
+      <ng-container
+        [ngTemplateOutlet]="toTemplate"
+        [ngTemplateOutletContext]="{ toObject: to }"
+      ></ng-container>
+    </ng-container>
+  </div>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <input type="text" matInput />
+  </mat-form-field>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="message"></div>

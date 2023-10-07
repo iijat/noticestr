@@ -1,0 +1,20 @@
+@use '@angular/material' as mat;
+@import '../../../styles/material.scss';
+
+.clipboard {
+  overflow-x: hidden;
+  width: 100;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-weight: 300;
+
+  padding: 4px;
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: mat.get-color-from-palette($primary, 200);
+  }
+}

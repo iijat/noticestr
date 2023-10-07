@@ -1,0 +1,38 @@
+.user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 8px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  .picture {
+    height: 48px;
+    width: 48px;
+    border-radius: 100%;
+
+    ::ng-deep .mat-icon {
+      width: 48px;
+      height: 48px;
+
+      opacity: 0.5;
+
+      .material-symbols-outlined {
+        font-size: 48px;
+      }
+    }
+
+    img {
+      height: inherit;
+      width: inherit;
+      border-radius: 100%;
+    }
+  }
+
+  .details {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

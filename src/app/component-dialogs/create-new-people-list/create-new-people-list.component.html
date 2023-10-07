@@ -1,0 +1,83 @@
+<h1 mat-dialog-title>
+  <!-- <div class="flex-row align-items-center"> -->
+  <span>New PEOPLE LIST </span>
+  <app-link
+    href="https://github.com/nostr-protocol/nips/blob/master/51.md"
+    tooltip="Go to https://github.com/nostr-protocol/nips/blob/master/51.md"
+    name="(Kind 30000)"
+    class="mat-body"
+  ></app-link>
+</h1>
+
+<mat-dialog-content>
+  <div class="flex-column gap-normal dense-2">
+    <div style="height: 4px">
+      <mat-progress-bar
+        *ngIf="activity"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Name</mat-label>
+      <input
+        type="text"
+        matInput
+        required
+        [(ngModel)]="listName"
+        [autocomplete]="uuid1"
+      />
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Pubkey / Nostr Address</mat-label>
+        <input
+          type="text"
+          placeholder="Pubkey (HEX or NPUB) or Nostr Address (NIP-05)"
+          matInput
+          [(ngModel)]="toBeAddedString"
+          [autocomplete]="uuid2"
+          (keydown.enter)="addPubkey()"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Visibility</mat-label>
+        <mat-select [(ngModel)]="pubkeyVisibility">
+          <mat-option value="private">Private</mat-option>
+          <mat-option value="public">Public</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button class="height-100" (click)="addPubkey()">
+        ADD
+      </button>
+    </div>
+
+    <ng-container *ngFor="let pubkeyData of pubkeys | keyvalue">
+      <div class="flex-row align-items-center gap-normal">
+        <app-user [pubkey]="pubkeyData.key"></app-user>
+        <div class="dense-2 font-size-12">
+          <mat-chip *ngIf="pubkeyData.value === 'private'">private</mat-chip>
+        </div>
+        <span class="flex-grow-1"></span>
+        <button mat-icon-button (click)="onClickDeletePubkey(pubkeyData.key)">
+          <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>CANCEL</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="pubkeys.size === 0 || activity || !listName"
+    (click)="createList()"
+  >
+    <span>CREATE</span>
+  </button>
+</mat-dialog-actions>

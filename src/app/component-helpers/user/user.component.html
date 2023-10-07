@@ -1,0 +1,41 @@
+<div class="user">
+  <div class="picture">
+    <mat-icon
+      *ngIf="
+        !mainService.metadata.get(pubkey ?? 'na')?.metadata?.picture;
+        else hasPicture
+      "
+    >
+      <span class="material-symbols-outlined"> account_circle </span>
+    </mat-icon>
+
+    <ng-template #hasPicture>
+      <img
+        [src]="mainService.metadata.get(pubkey ?? 'na')?.metadata?.picture"
+      />
+    </ng-template>
+  </div>
+
+  <div class="flex-column details">
+    <span *ngIf="mainService.metadata.get(pubkey ?? 'na')?.metadata?.name">
+      {{ mainService.metadata.get(pubkey ?? 'na')?.metadata?.name }}
+    </span>
+    <span
+      *ngIf="
+        mainService.metadata.get(pubkey ?? 'na')?.confirmedNip05;
+        else showPubkeyElement
+      "
+      class="flex-row gap-tiny align-items-center"
+    >
+      <span class="material-symbols-outlined clr-green font-size-18">
+        verified
+      </span>
+      <span>
+        {{ mainService.metadata.get(pubkey ?? 'na')?.confirmedNip05 }}
+      </span>
+    </span>
+    <ng-template #showPubkeyElement>
+      <span class="details">{{ pubkey }}</span>
+    </ng-template>
+  </div>
+</div>

@@ -1,1 +1,92 @@
-/* You can add global styles to this file, and also import other style files */
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+@use '@ng-matero/extensions' as mtx;
+
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+
+@import './styles/material.scss';
+
+$lightTheme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($lightTheme);
+@include mtx.all-component-themes($lightTheme);
+
+$my-typography: mat.define-typography-config();
+@include mat.typography-hierarchy($my-typography);
+
+@import './styles/dimensions.scss';
+@import './styles/flex.scss';
+@import './styles/colors.scss';
+@import './styles/font.scss';
+@import './styles/margins.scss';
+@import './styles/general.scss';
+@import './styles/grid.scss';
+
+:root {
+  --bg: #f3f5f7;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  color: #000000;
+  background-color: #f3f5f7;
+
+  //font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  font-family: 'Hanken Grotesk', sans-serif;
+
+  font-weight: 300;
+  //font-family: 'Roboto', sans-serif;
+}
+
+.dense-0 {
+  @include mat.all-component-densities(0);
+}
+
+.dense-1 {
+  @include mat.all-component-densities(-1);
+}
+
+.dense-2 {
+  @include mat.all-component-densities(-2);
+}
+
+.dense-3 {
+  @include mat.all-component-densities(-3);
+}
+
+.width-100 {
+  width: 100% !important;
+}
+
+.height-100 {
+  height: 100% !important;
+}
+
+.mat-mdc-menu-content {
+  padding: 0 !important;
+}
+
+.mtx-popover-direction-arrow {
+  visibility: hidden !important;
+}

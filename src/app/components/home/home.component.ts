@@ -4,6 +4,8 @@ import { NostrService } from 'src/app/services/nostr.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NostrConnector } from 'src/app/models/nostrConnector';
 import { MainService } from 'src/app/services/main.service';
+import { OwnRelayDialogComponent } from 'src/app/component-dialogs/own-relay-dialog/own-relay-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +21,8 @@ export class HomeComponent {
     private _mainService: MainService,
     public nostrService: NostrService,
     private _router: Router,
-    private _clipboard: Clipboard
+    private _clipboard: Clipboard,
+    private _matDialog: MatDialog
   ) {}
 
   async onClickLoginViaNip07() {
@@ -27,9 +30,14 @@ export class HomeComponent {
     this._mainService.setMyPubkey(pubkey);
     this._mainService.setMyNostrConnectorUse('nip-07');
 
-    //this.nostrService.goWith('nip07');
-    //const pubkey = await this.nostrService.getPublicKey();
-    this._router.navigateByUrl(`/base/${pubkey}`);
+    const dialog = this._matDialog.open(OwnRelayDialogComponent, {
+      autoFocus: false,
+      maxWidth: 640,
+    });
+
+    dialog.afterClosed().subscribe((initialRelay: string | undefined) => {
+      this._router.navigateByUrl(`/base/${pubkey}`);
+    });
   }
 
   onClickLoginViaNip46() {
@@ -43,8 +51,6 @@ export class HomeComponent {
         this._router.navigateByUrl(`/base/${pubkey}`);
       }
     );
-
-    this.nostrService.generateNip46AppUri();
   }
 
   onClickBrand() {

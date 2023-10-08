@@ -162,7 +162,9 @@
               <button mat-menu-item (click)="delete(list)">Delete List</button>
             </mat-menu>
 
-            <button mat-stroked-button>ADD PEOPLE</button>
+            <button mat-stroked-button (click)="editPeopleList(list)">
+              EDIT LIST
+            </button>
           </div>
         </div>
 

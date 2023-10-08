@@ -135,8 +135,6 @@ export class CreateNewPeopleListComponent {
       this._mainService.publishEventToMyRelays(channelId, event);
     } catch (error) {
       console.log(error);
-    } finally {
-      this.activity = false;
     }
   }
 }

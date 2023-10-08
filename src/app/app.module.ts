@@ -43,6 +43,7 @@ import { LinkComponent } from './component-helpers/link/link.component';
 import { ToolbarComponent } from './component-helpers/toolbar/toolbar.component';
 import { ConfirmDialogComponent } from './component-dialogs/confirm-dialog/confirm-dialog.component';
 import { InfoComponent } from './component-helpers/info/info.component';
+import { EditPeopleListDialogComponent } from './component-dialogs/edit-people-list-dialog/edit-people-list-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { InfoComponent } from './component-helpers/info/info.component';
     ToolbarComponent,
     ConfirmDialogComponent,
     InfoComponent,
+    EditPeopleListDialogComponent,
   ],
   imports: [
     BrowserModule,

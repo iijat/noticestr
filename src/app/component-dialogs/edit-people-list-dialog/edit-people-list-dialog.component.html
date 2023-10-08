@@ -1,0 +1,100 @@
+<h1 mat-dialog-title>
+  <span>
+    Edit <span class="clr-green"> {{ data.list.listName }} </span>
+  </span>
+</h1>
+
+<mat-dialog-content>
+  <div class="flex-column">
+    <div style="height: 4px">
+      <mat-progress-bar
+        *ngIf="activity"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+
+    <!-- ADD PUBKEY / NOSTR ADDRESS -->
+    <div class="mt-small mb-normal row dense-2">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Pubkey / Nostr Address</mat-label>
+        <input
+          type="text"
+          placeholder="Pubkey (HEX or NPUB) or Nostr Address (NIP-05)"
+          matInput
+          [(ngModel)]="toBeAddedString"
+          [autocomplete]="uuid1"
+          (keydown.enter)="addPubkey()"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Visibility</mat-label>
+        <mat-select [(ngModel)]="pubkeyVisibility">
+          <mat-option value="private">Private</mat-option>
+          <mat-option value="public">Public</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button class="height-100" (click)="addPubkey()">
+        ADD
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="mt-normal"></div>
+
+    <!-- PUBLIC PUBKEYS -->
+    <div
+      *ngFor="
+        let publicPubkey of data.list.unsafedPublicPubkeys ??
+          data.list.publicPubkeys
+      "
+      class="pubkey-row"
+    >
+      <app-user [pubkey]="publicPubkey"></app-user>
+      <span class="flex-grow-1"></span>
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="data.list.deletePublicPubkey(publicPubkey)"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- PRIVATE PUBKEYS -->
+    <div
+      *ngFor="
+        let privatePubkey of data.list.unsafedPrivatePubkeys ??
+          data.list.privatePubkeys
+      "
+      class="pubkey-row"
+    >
+      <app-user [pubkey]="privatePubkey"></app-user>
+      <div class="dense-2 font-size-12">
+        <mat-chip>private</mat-chip>
+      </div>
+      <span class="flex-grow-1"></span>
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="data.list.deletePrivatePubkey(privatePubkey)"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>CANCEL</button>
+  <button
+    mat-flat-button
+    [disabled]="activity || !data.list.hasUnsafedChanges"
+    (click)="publish()"
+    color="primary"
+  >
+    PUBLISH
+  </button>
+</mat-dialog-actions>

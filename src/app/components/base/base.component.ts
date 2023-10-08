@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { OwnRelayDialogComponent } from 'src/app/component-dialogs/own-relay-dialog/own-relay-dialog.component';
 import { NostrManager } from 'src/app/models/nostrManager';
 import { MainService } from 'src/app/services/main.service';
 
@@ -10,12 +8,7 @@ import { MainService } from 'src/app/services/main.service';
   styleUrls: ['./base.component.scss'],
 })
 export class BaseComponent implements OnInit {
-  pubkey: string | undefined;
-
-  constructor(
-    private _matDialog: MatDialog,
-    private _mainService: MainService
-  ) {}
+  constructor(private _mainService: MainService) {}
 
   ngOnInit(): void {
     if (!this._mainService.myPubkey || !this._mainService.myNostrConnectorUse) {
@@ -38,19 +31,5 @@ export class BaseComponent implements OnInit {
         this._mainService.myNostrConnectorUse
       );
     }
-
-    const dialog = this._matDialog.open(OwnRelayDialogComponent, {
-      autoFocus: false,
-      maxWidth: 640,
-    });
-
-    dialog.afterClosed().subscribe((initialRelay: string | undefined) => {
-      // this._relayService.crawlMe(
-      //   this._mainService.myPubkey ?? 'na',
-      //   initialRelay
-      // );
-    });
   }
-
-  //private async _loadData(relay: string, pubkey: string) {}
 }

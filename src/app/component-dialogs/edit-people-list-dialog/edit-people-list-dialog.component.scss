@@ -1,0 +1,25 @@
+@use '@angular/material' as mat;
+@import '../../../styles/material.scss';
+
+:host {
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 130px auto;
+    grid-template-rows: auto;
+    column-gap: 8px;
+  }
+
+  .pubkey-row {
+    padding: 4px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 16px;
+
+    &:hover {
+      background-color: mat.get-color-from-palette($primary, 100);
+    }
+  }
+}

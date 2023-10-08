@@ -9,6 +9,10 @@ import { CreateNewPeopleListComponent } from 'src/app/component-dialogs/create-n
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { v4 } from 'uuid';
 import { SakService } from 'src/app/services/sak.service';
+import {
+  EditPeopleListDialogComponent,
+  EditPeopleListDialogData,
+} from 'src/app/component-dialogs/edit-people-list-dialog/edit-people-list-dialog.component';
 
 @Component({
   selector: 'app-nostr-people-lists',
@@ -166,6 +170,20 @@ export class NostrPeopleListsComponent implements OnInit {
       autoFocus: false,
       width: '880px',
       maxWidth: '880px',
+    });
+  }
+
+  editPeopleList(list: PeopleListWrapper) {
+    const data: EditPeopleListDialogData = {
+      list,
+    };
+
+    const dialog = this._matDialog.open(EditPeopleListDialogComponent, {
+      data,
+    });
+
+    dialog.afterClosed().subscribe(() => {
+      // TODO
     });
   }
 

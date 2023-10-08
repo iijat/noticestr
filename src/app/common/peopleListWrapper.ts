@@ -1,5 +1,3 @@
-import { Event } from 'nostr-tools';
-import { NostrService } from '../services/nostr.service';
 import { RelayEvent } from '../models/nostrRelayer';
 import { NostrManager } from '../models/nostrManager';
 
@@ -80,6 +78,17 @@ export class PeopleListWrapper {
   }
 
   addPublicPubkey(pubkey: string) {
+    // Only add, if the pubkey is really NEW.
+    if (typeof this.unsafedPublicPubkeys === 'undefined') {
+      if (this.publicPubkeys.includes(pubkey)) {
+        return;
+      }
+    } else {
+      if (this.unsafedPublicPubkeys.includes(pubkey)) {
+        return;
+      }
+    }
+
     if (typeof this.unsafedPublicPubkeys === 'undefined') {
       this.unsafedPublicPubkeys = Array.from(this.publicPubkeys);
     }
@@ -101,6 +110,17 @@ export class PeopleListWrapper {
   }
 
   addPrivatePubkey(pubkey: string) {
+    // Only add, if the pubkey is really NEW.
+    if (typeof this.unsafedPrivatePubkeys === 'undefined') {
+      if (this.privatePubkeys.includes(pubkey)) {
+        return;
+      }
+    } else {
+      if (this.unsafedPrivatePubkeys.includes(pubkey)) {
+        return;
+      }
+    }
+
     if (typeof this.unsafedPrivatePubkeys === 'undefined') {
       this.unsafedPrivatePubkeys = Array.from(this.privatePubkeys);
     }

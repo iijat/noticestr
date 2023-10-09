@@ -88,7 +88,7 @@ export class EditPeopleListDialogComponent implements OnInit {
           relayEvents.forEach((x) => this._mainService.setPeopleList(x));
           if (eos) {
             this.activity = false;
-            this._dialogRef.close();
+            this._dialogRef.close(true);
           }
         }
       );

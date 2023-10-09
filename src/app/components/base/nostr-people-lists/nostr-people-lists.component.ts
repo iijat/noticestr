@@ -180,10 +180,13 @@ export class NostrPeopleListsComponent implements OnInit {
 
     const dialog = this._matDialog.open(EditPeopleListDialogComponent, {
       data,
+      minWidth: 900,
     });
 
-    dialog.afterClosed().subscribe(() => {
-      // TODO
+    dialog.afterClosed().subscribe((hasPublished: boolean) => {
+      if (!hasPublished) {
+        list.resetChanges();
+      }
     });
   }
 

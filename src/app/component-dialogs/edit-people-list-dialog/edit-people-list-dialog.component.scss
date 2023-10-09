@@ -18,8 +18,16 @@
     align-items: center;
     column-gap: 16px;
 
+    .delete-button {
+      visibility: hidden;
+    }
+
     &:hover {
       background-color: mat.get-color-from-palette($primary, 100);
+
+      .delete-button {
+        visibility: visible;
+      }
     }
   }
 }

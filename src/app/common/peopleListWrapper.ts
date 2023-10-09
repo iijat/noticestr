@@ -136,6 +136,10 @@ export class PeopleListWrapper {
   }
 
   private async _decryptPrivatePubkeys() {
+    if (!this.relayEvent.event.content) {
+      return;
+    }
+
     const decodedString = await this._nostrManager?.nostrConnector.decrypt(
       this.relayEvent.event.content
     );

@@ -61,6 +61,10 @@ export class MainService {
     return this.#nostrManager;
   }
 
+  get fallbackRelays() {
+    return this.#fallbackRelays;
+  }
+
   #myPubkey: string | undefined;
   #myNostrConnectorUse: NostrConnectorUse | undefined;
   #myInitialRelay: string | undefined;

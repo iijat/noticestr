@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { FetchResult } from './nostrRelayer';
 import { Event } from 'nostr-tools';
 import { NostrManager } from './nostrManager';
@@ -26,6 +26,55 @@ export class NostrDataObject<T> {
 
   refetch() {
     this.#value = this.#generateObservable();
+  }
+
+  /**
+   * Publish etched and after that changed data or
+   * publish completely new data.
+   */
+  async publish(data: T | undefined = undefined): Promise<boolean> {
+    const publishNew = typeof data !== 'undefined';
+
+    if (!publishNew) {
+      const result = await firstValueFrom(this.value$);
+      if (!result.value || !this.#fetchResult) {
+        throw new Error('No existing data exists that can be published.');
+      }
+
+      const publishEvents =
+        await this.conf.manager.nostrRelayer.publish30078Data<T>(
+          result.value,
+          this.conf.name,
+          this.conf.fromRelays
+        );
+
+      if (publishEvents.empty()) {
+        return false;
+      }
+
+      this.#fetchResult.event = publishEvents[0].event;
+    } else {
+      // Publish new data.
+      const publishEvents =
+        await this.conf.manager.nostrRelayer.publish30078Data<T>(
+          data,
+          this.conf.name,
+          this.conf.fromRelays
+        );
+
+      if (publishEvents.empty()) {
+        return false;
+      }
+
+      this.#fetchResult = {
+        value: data,
+        fromRelays: this.conf.fromRelays,
+        event: publishEvents[0].event,
+        foundOnRelays: Array.from(new Set(publishEvents.map((x) => x.url))),
+      };
+    }
+
+    return true;
   }
 
   #generateObservable() {

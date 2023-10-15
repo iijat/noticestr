@@ -1,24 +1,99 @@
 <ng-template #toTemplate let-toObject="toObject">
-  <div>Hi {{ toObject.nip05 }}</div>
+  <div class="to-label">
+    <div #popoverTrigger="mtxPopoverTrigger" [mtxPopoverTriggerFor]="toPopover">
+      {{ toObject.destination }}
+    </div>
+
+    <mtx-popover #toPopover="mtxPopover">
+      <ng-template mtxPopoverContent>
+        <div class="flex-column">
+          <ng-container
+            *ngIf="mainService.relayList.get(toObject.pubkey)?.nip65Relays"
+          >
+            <span
+              *ngFor="
+                let nip65Relay of mainService.relayList.get(toObject.pubkey)
+                  ?.nip65Relays ?? []
+              "
+            >
+              {{ nip65Relay.url }} - {{ nip65Relay.tag }}
+            </span>
+          </ng-container>
+        </div>
+      </ng-template>
+    </mtx-popover>
+
+    <div
+      class="material-symbols-outlined"
+      (click)="removeTo(toObject.pubkey)"
+      style="font-size: 16px !important"
+    >
+      close
+    </div>
+  </div>
 </ng-template>
 
-<div class="row-1">
-  <button mat-stroked-button color="primary" class="mr-normal">To</button>
+<div class="row-0">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="send()"
+    [disabled]="!canSend"
+  >
+    Send
+  </button>
+</div>
 
-  <div class="flex-row gap-small">
+<mat-divider></mat-divider>
+
+<div class="row-1">
+  <button (click)="test()" mat-stroked-button color="primary" class="mr-normal">
+    To
+  </button>
+
+  <div class="flex-row flex-wrap gap-small align-items-center dense-2">
     <ng-container *ngFor="let to of toObjects">
       <ng-container
         [ngTemplateOutlet]="toTemplate"
         [ngTemplateOutletContext]="{ toObject: to }"
       ></ng-container>
     </ng-container>
-  </div>
 
-  <mat-form-field subscriptSizing="dynamic" appearance="outline">
-    <input type="text" matInput />
+    <mat-form-field subscriptSizing="dynamic" appearance="outline">
+      <input
+        type="text"
+        matInput
+        [(ngModel)]="to"
+        (keydown.enter)="applyTo()"
+      />
+    </mat-form-field>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="row-2">
+  <mat-form-field
+    subscriptSizing="dynamic"
+    appearance="outline"
+    class="width-100"
+  >
+    <input
+      type="text"
+      matInput
+      placeholder="Add a subject"
+      [(ngModel)]="subject"
+    />
   </mat-form-field>
 </div>
 
 <mat-divider></mat-divider>
 
-<div class="message"></div>
+<div class="message">
+  <textarea
+    matInput
+    cols="30"
+    [(ngModel)]="message"
+    (input)="autoresize($event)"
+  ></textarea>
+</div>

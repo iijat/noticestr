@@ -3,12 +3,14 @@ interface NoticeStrBase {
 }
 
 export interface NoticeStrMessage extends NoticeStrBase {
-  title: string;
-  text: string | undefined;
+  subject: string;
+  message: string | undefined;
   createdAt: number;
 
   recipients: Array<{
     pubkey: string;
+    nip05: string | null;
+    sendRelays: string[];
     sendOkRelays:
       | Array<{
           url: string;

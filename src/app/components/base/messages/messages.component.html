@@ -1,13 +1,14 @@
-<div class="header">
+<app-toolbar>
+  <div class="flex-grow-1"></div>
   <button mat-flat-button color="primary" (click)="newMessage()">
     New Message
   </button>
-</div>
+</app-toolbar>
 
 <mtx-split [restrictMove]="true">
   <mtx-split-pane [size]="25">
     <div class="flex-column">
-      <div *ngFor="let item of messages?.items | keyvalue">
+      <div *ngFor="let item of nostrDataService.messages?.items | keyvalue">
         {{ item.key }}
       </div>
     </div>

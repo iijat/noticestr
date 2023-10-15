@@ -1,5 +1,6 @@
+import { finishRepostEvent } from 'nostr-tools/lib/nip18';
 import { NostrDataObject, NostrDataObjectConfig } from './nostrDataObject';
-import { first } from 'rxjs';
+import { first, firstValueFrom } from 'rxjs';
 
 export type NostrDataCollectionMeta = {
   name: string;
@@ -49,6 +50,43 @@ export class NostrDataCollection<
   }
 
   #items: Map<string, NostrDataObject<T>> | undefined;
+
+  async addItem(item: T, tag: string) {
+    let collection = await firstValueFrom(this.value$);
+    if (typeof collection.value === 'undefined') {
+      // The collection "is empty" and nothing was ever published.
+      // Publish "empty" data.
+
+      const ok = await this.publish({ name: this.conf.name, items: [] });
+      if (!ok) {
+        throw new Error('Could not publish meta data for empty collection.');
+      }
+      collection = await firstValueFrom(this.value$);
+    }
+
+    if (!collection.value) {
+      throw new Error('Unknown error. Should not be possible.');
+    }
+
+    const objectId = new Date().getTime().toString();
+    const conf: NostrDataCollectionConfig = {
+      name: `${this.conf.name}_${objectId}`,
+      fromRelays: this.conf.fromRelays,
+      manager: this.conf.manager,
+    };
+
+    const newItem = new NostrDataObject<T>(conf);
+    const publishOk = await newItem.publish(item);
+    if (!publishOk) {
+      throw new Error('Could not publish item.');
+    }
+
+    collection.value.items.push([tag, objectId]);
+    const ok = await this.publish();
+    if (!ok) {
+      throw new Error('Could not publish meta data for updated collection.');
+    }
+  }
 }
 
 // import { Event, Filter, Kind } from 'nostr-tools';

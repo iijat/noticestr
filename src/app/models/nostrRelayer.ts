@@ -10,7 +10,6 @@ import { NostrConnector } from './nostrConnector';
 import { Nip11RID } from '../common/typeDefs';
 import axios from 'axios';
 import '../common/arrayExtensions';
-import { Observable } from 'rxjs';
 import { v4 } from 'uuid';
 import { NostrPubSub } from './nostrPubSub';
 import EventEmitter from 'events';
@@ -243,6 +242,49 @@ export class NostrRelayer {
       fromRelays,
       foundOnRelays: result[1],
     };
+  }
+
+  publish30078Data<T>(
+    data: T,
+    name: string,
+    toRelays: string[]
+  ): Promise<RelayEvent[]> {
+    return new Promise((resolve, reject) => {
+      const unencryptedContent = JSON.stringify(data);
+      this.conf.connector
+        .encrypt(unencryptedContent)
+        .then((content) => {
+          const eventTemplate: EventTemplate = {
+            kind: 30078 as any,
+            tags: [['d', name]],
+            content,
+            created_at: Math.floor(new Date().getTime() / 1000),
+          };
+
+          this.conf.connector
+            .signEvent(eventTemplate)
+            .then((event) => {
+              const channelId = v4();
+              const returnedRelayEvents: RelayEvent[] = [];
+              this._nostrPubSub.on(channelId, (eos, relayEvents) => {
+                returnedRelayEvents.push(...relayEvents);
+                if (eos) {
+                  resolve(returnedRelayEvents);
+                  return;
+                }
+              });
+              this.publishEvent(channelId, event, toRelays);
+            })
+            .catch((error) => {
+              reject(error);
+              return;
+            });
+        })
+        .catch((error) => {
+          reject(error);
+          return;
+        });
+    });
   }
 
   // #endregion 30078

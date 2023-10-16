@@ -1,6 +1,6 @@
 import { finishRepostEvent } from 'nostr-tools/lib/nip18';
 import { NostrDataObject, NostrDataObjectConfig } from './nostrDataObject';
-import { first, firstValueFrom } from 'rxjs';
+import { Subject, first, firstValueFrom } from 'rxjs';
 
 export type NostrDataCollectionMeta = {
   name: string;
@@ -26,6 +26,13 @@ export type NostrDataCollectionConfig = NostrDataObjectConfig;
 export class NostrDataCollection<
   T
 > extends NostrDataObject<NostrDataCollectionMeta> {
+  hasLoadedItemsEvent = new Subject();
+  get hasLoadedItems(): boolean {
+    return this.#hasLoadedItems;
+  }
+
+  #hasLoadedItems = false;
+
   get items(): Map<string, NostrDataObject<T>> {
     if (typeof this.#items === 'undefined') {
       this.#items = new Map<string, NostrDataObject<T>>();
@@ -41,8 +48,10 @@ export class NostrDataCollection<
             manager: this.conf.manager,
           };
 
-          this.#items?.set(item[0], new NostrDataObject<T>(conf));
+          this.#items?.set(item[1], new NostrDataObject<T>(conf));
         }
+        this.#hasLoadedItems;
+        this.hasLoadedItemsEvent.next(null);
       });
     }
 

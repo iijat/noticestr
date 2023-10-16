@@ -1,1 +1,26 @@
-<p>edit-message works!</p>
+<ng-container
+  *ngIf="nostrDataService.messages?.items?.get(messageId ?? 'na') as item"
+>
+  <ng-container *ngIf="item.value$ | async as message">
+    <div class="row">ACTIONS</div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row">TO ...</div>
+
+    <mat-divider></mat-divider>
+
+    <div class="message">
+      <textarea
+        *ngIf="message.value"
+        #messageTextarea
+        matInput
+        cols="30"
+        (input)="autoresize($event)"
+        [(ngModel)]="message.value.message"
+      ></textarea>
+    </div>
+  </ng-container>
+</ng-container>
+
+<!-- <button (click)="show()">SHOW</button> -->

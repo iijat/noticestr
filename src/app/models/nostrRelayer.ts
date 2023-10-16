@@ -398,7 +398,7 @@ export class NostrRelayer {
 
   #goOnline(relay: Relay): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('ASSURE ONLINE on ' + relay.url + ' - ' + relay.status);
+      //console.log('ASSURE ONLINE on ' + relay.url + ' - ' + relay.status);
 
       if (relay.status === WebSocket.OPEN) {
         resolve();

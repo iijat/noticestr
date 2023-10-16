@@ -4,6 +4,7 @@ import { NostrDataCollection } from 'src/app/models/nostrDataCollection';
 import { NoticeStrMessage } from 'src/app/models/noticeStr';
 import { MainService } from 'src/app/services/main.service';
 import { NostrDataService } from 'src/app/services/nostr-data.service';
+import { SelectionService } from 'src/app/services/selection.service';
 
 @Component({
   selector: 'app-messages',
@@ -18,7 +19,8 @@ export class MessagesComponent implements OnInit {
     //private _relayService: RelayService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    public nostrDataService: NostrDataService
+    public nostrDataService: NostrDataService,
+    public selectionService: SelectionService
   ) {}
 
   ngOnInit(): void {
@@ -33,5 +35,11 @@ export class MessagesComponent implements OnInit {
 
   newMessage() {
     this._router.navigate(['new'], { relativeTo: this._activatedRoute });
+  }
+
+  deleteMessage(event: MouseEvent, messageId: string) {
+    console.log(messageId);
+    event.preventDefault();
+    event.stopPropagation();
   }
 }

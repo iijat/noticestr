@@ -1,18 +1,55 @@
+<ng-template #messageItem let-item="item">
+  <a class="subject" matRipple [routerLink]="item[1]" routerLinkActive="active">
+    <div class="flex-column flex-grow-1">
+      <span class="font-size-20">
+        {{ item[0] }}
+      </span>
+      <span class="font-size-12">
+        {{ item[1] | date : 'yyyy-MM-dd HH:mm' }}
+      </span>
+    </div>
+    <div class="icons" (click)="deleteMessage($event, item[1])" matRipple>
+      <span class="material-symbols-outlined" style="font-size: 20px">
+        delete
+      </span>
+    </div>
+  </a>
+</ng-template>
+
 <app-toolbar>
-  <div class="flex-grow-1"></div>
   <button mat-flat-button color="primary" (click)="newMessage()">
     New Message
   </button>
+
+  <button
+    mat-stroked-button
+    class="ml-normal"
+    [disabled]="!selectionService.selectedMessageId"
+  >
+    <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
+    <span>Delete</span>
+  </button>
+
+  <div class="flex-grow-1"></div>
 </app-toolbar>
 
 <mtx-split [restrictMove]="true">
+  <!-- LEFT -->
   <mtx-split-pane [size]="25">
     <div class="flex-column">
-      <div *ngFor="let item of nostrDataService.messages?.items | keyvalue">
-        {{ item.key }}
-      </div>
+      <ng-container *ngIf="nostrDataService.messages?.value$ | async as meta">
+        <ng-container *ngFor="let item of meta.value?.items">
+          <ng-container
+            [ngTemplateOutlet]="messageItem"
+            [ngTemplateOutletContext]="{ item: item }"
+          >
+          </ng-container>
+        </ng-container>
+      </ng-container>
     </div>
   </mtx-split-pane>
+
+  <!-- RIGHT -->
   <mtx-split-pane [size]="75">
     <div class="right">
       <router-outlet></router-outlet>

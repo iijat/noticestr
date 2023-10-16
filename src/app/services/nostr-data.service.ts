@@ -10,14 +10,25 @@ import { NostrManager } from '../models/nostrManager';
   providedIn: 'root',
 })
 export class NostrDataService {
-  messages: NostrDataCollection<NoticeStrMessage> | undefined;
+  get messages() {
+    if (!this.#isInitialized) {
+      throw new Error(this.#notInitializedErrorMessage);
+    }
+    return this.#messages;
+  }
 
   #prefix = 'noticestr';
+  #notInitializedErrorMessage = `Please call the method 'initialize' first.`;
   #isInitialized = false;
+  #messages: NostrDataCollection<NoticeStrMessage> | undefined;
 
   //constructor() {}
 
   initialize(storageRelays: string[], manager: NostrManager) {
+    if (this.#isInitialized) {
+      return;
+    }
+
     this.#initializeMessages(storageRelays, manager);
 
     this.#isInitialized = true;
@@ -30,6 +41,6 @@ export class NostrDataService {
       manager,
     };
 
-    this.messages = new NostrDataCollection(conf);
+    this.#messages = new NostrDataCollection(conf);
   }
 }

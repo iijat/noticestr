@@ -17,14 +17,26 @@
 </ng-template>
 
 <app-toolbar>
-  <button mat-flat-button color="primary" (click)="newMessage()">
-    New Message
-  </button>
+  <div>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="newMessage()"
+      class="font-size-16"
+    >
+      <mat-icon fontSet="material-symbols-outlined"> mail </mat-icon>
+      <span class="">New Message</span>
+    </button>
+  </div>
 
   <button
     mat-stroked-button
     class="ml-normal"
+    style="font-size: 16px"
     [disabled]="!selectionService.selectedMessageId"
+    (click)="
+      nostrDataService.messages?.deleteItem(selectionService.selectedMessageId)
+    "
   >
     <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
     <span>Delete</span>
@@ -37,8 +49,10 @@
   <!-- LEFT -->
   <mtx-split-pane [size]="25">
     <div class="flex-column">
-      <ng-container *ngIf="nostrDataService.messages?.value$ | async as meta">
-        <ng-container *ngFor="let item of meta.value?.items">
+      <ng-container
+        *ngIf="nostrDataService.messages?.value$ | async as messages"
+      >
+        <ng-container *ngFor="let item of messages.value?.items">
           <ng-container
             [ngTemplateOutlet]="messageItem"
             [ngTemplateOutletContext]="{ item: item }"
@@ -56,13 +70,3 @@
     </div>
   </mtx-split-pane>
 </mtx-split>
-
-<!-- <div *ngFor="let item of messages?.items | keyvalue">
-  {{ item.key }}
-</div>
-
-<div *ngIf="loading; else notLoadingElement" class="loading">
-  <app-spinner></app-spinner>
-</div>
-
-<ng-template #notLoadingElement>LOADING FINISHED</ng-template> -->

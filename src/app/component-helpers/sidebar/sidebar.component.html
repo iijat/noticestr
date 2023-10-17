@@ -4,15 +4,22 @@
   <span class="version">v {{ version }}</span>
 </div>
 
-<a class="menu" routerLink="nostr-people-lists" routerLinkActive="menu-active">
-  Nostr People Lists
+<a
+  class="menu mt-normal"
+  routerLink="nostr-people-lists"
+  routerLinkActive="menu-active"
+>
+  <span class="material-symbols-outlined"> group </span>
+  <span>Nostr People Lists</span>
 </a>
-<a class="menu" routerLink="messages" routerLinkActive="menu-active">
-  Messages
+
+<a class="menu mt-normal" routerLink="messages" routerLinkActive="menu-active">
+  <span class="material-symbols-outlined"> mail </span>
+  <span>Messages</span>
 </a>
 
 <div class="flex-grow-1 flex-column-reverse"></div>
-<div class="relays-box mat-body">
+<div class="relays-box font-size-16">
   <div
     *ngFor="
       let relay of mainService.nostrManager?.nostrRelayer?.relays | keyvalue
@@ -51,5 +58,6 @@
 </div>
 <app-user
   [pubkey]="mainService.myPubkey"
-  style="margin: 16px 0 16px 16px"
+  style="margin: 24px 0 24px 16px"
+  class="font-size-16"
 ></app-user>

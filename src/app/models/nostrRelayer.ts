@@ -50,6 +50,25 @@ export class NostrRelayer {
 
   // #region Public Methods
 
+  publishEventAsync(event: Event, toRelays: string[]): Promise<RelayEvent[]> {
+    return new Promise((resolve, reject) => {
+      const channelId = v4();
+
+      const returnedRelayEvents: RelayEvent[] = [];
+      this._nostrPubSub.on(channelId, (eos, relayEvents) => {
+        returnedRelayEvents.push(...relayEvents);
+
+        if (!eos) {
+          return;
+        }
+
+        resolve(returnedRelayEvents);
+      });
+
+      this.publishEvent(channelId, event, toRelays);
+    });
+  }
+
   publishEvent(channelId: string, event: Event, toRelays: string[]) {
     const relays = this.#getRelays(toRelays);
     let count = 0;

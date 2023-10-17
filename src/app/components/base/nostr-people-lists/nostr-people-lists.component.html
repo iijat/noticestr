@@ -8,7 +8,7 @@
     *ngFor="let p of pubkeys; let first = first"
     class="user-item"
     [class.user-item-selected]="selected.get(list.listName + p)"
-    style="padding-top: 2px; padding-bottom: 2px"
+    style="padding-top: 2px; padding-bottom: 2px; padding-left: 4px"
   >
     <!-- <app-nostr-user [pubkey]="p" [isPrivate]="isPrivate"></app-nostr-user> -->
     <app-user #nostrUser [pubkey]="p"></app-user>
@@ -58,10 +58,10 @@
 </ng-template>
 
 <app-toolbar>
-  <div class="flex-grow-1"></div>
+  <!-- <div class="flex-grow-1"></div> -->
   <button
     mat-flat-button
-    color="primary"
+    color="accent"
     class=""
     (click)="onClickNewPeopleList()"
   >

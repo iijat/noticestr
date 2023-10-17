@@ -1,6 +1,8 @@
 import { finishRepostEvent } from 'nostr-tools/lib/nip18';
 import { NostrDataObject, NostrDataObjectConfig } from './nostrDataObject';
 import { Subject, first, firstValueFrom } from 'rxjs';
+import { Event, EventTemplate, Kind } from 'nostr-tools';
+import { DateTime } from 'luxon';
 
 export type NostrDataCollectionMeta = {
   name: string;
@@ -95,6 +97,75 @@ export class NostrDataCollection<
     if (!ok) {
       throw new Error('Could not publish meta data for updated collection.');
     }
+  }
+
+  async deleteItem(itemId: string | undefined): Promise<boolean> {
+    if (!itemId) {
+      throw new Error('Please provide a valid item id.');
+    }
+
+    const collection = await firstValueFrom(this.value$);
+    if (typeof collection.value === 'undefined') {
+      // The collection "is empty" and nothing was ever published.
+      // Don't do anything.
+      throw new Error('Collection is empty. Cannot delete anything.');
+    }
+
+    if (!collection.value) {
+      throw new Error('Unknown error. Should not be possible.');
+    }
+
+    const itemIndex = collection.value.items.findIndex((x) => x[1] === itemId);
+    if (itemIndex === -1) {
+      throw new Error('Could not find an item with that id.');
+    }
+
+    // Signal an deletion event for the item itself.
+    // Then update the data in this collection
+    // Generate the deletion event for the item.
+    const itemDeletionEvent = await this.#generateItemDeletionEvent(itemId);
+
+    // Publish the deletion event for the item.
+    const confirmedDeletionRelayEvents =
+      await this.conf.manager.nostrRelayer.publishEventAsync(
+        itemDeletionEvent,
+        this.conf.fromRelays
+      );
+    if (confirmedDeletionRelayEvents.empty()) {
+      throw new Error('There was an error deleting the item object on nostr.');
+    }
+
+    // Delete the loaded item object.
+    this.items.delete(itemId);
+
+    // Update collection meta data and publish it.
+    collection.value.items.splice(itemIndex, 1);
+    const ok = await this.publish();
+    if (!ok) {
+      throw new Error(
+        'There was an error updating the collection meta data on nostr.'
+      );
+    }
+
+    this.conf.manager.nostrRelayer.cache.persistDeletionEvents();
+    return true;
+  }
+
+  async #generateItemDeletionEvent(itemId: string): Promise<Event> {
+    const eventTemplate: EventTemplate = {
+      kind: Kind.EventDeletion,
+      created_at: Math.floor(Date.now() / 1000),
+      tags: [
+        [
+          'a',
+          `kind:${this.conf.manager.conf.pubkey}:${this.conf.name}_${itemId}`,
+        ],
+      ],
+      content: 'User deleted collection item.',
+    };
+
+    const event = this.conf.manager.nostrConnector.signEvent(eventTemplate);
+    return event;
   }
 }
 

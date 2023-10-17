@@ -35,7 +35,7 @@
   }
 
   &:hover {
-    background-color: mat.get-color-from-palette($primary, 200);
+    background-color: mat.get-color-from-palette($primary, 100);
 
     .action-buttons {
       visibility: visible;

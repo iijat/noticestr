@@ -35,7 +35,8 @@ $my-typography: mat.define-typography-config();
 @import './styles/grid.scss';
 
 :root {
-  --bg: #f3f5f7;
+  --bg: #eeeeee; //#f3f5f7;
+  --bg2: lightgray;
 }
 
 html,
@@ -49,10 +50,10 @@ body {
   overflow-y: hidden;
 
   color: #000000;
-  background-color: #f3f5f7;
+  background-color: var(--bg);
 
   //font-family: Roboto, 'Helvetica Neue', sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   font-family: 'Hanken Grotesk', sans-serif;
 
   font-weight: 300;

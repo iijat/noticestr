@@ -50,6 +50,6 @@ $accent-palette: (
   ),
 );
 
-$primary: mat.define-palette($primary-palette, 400);
+$primary: mat.define-palette($primary-palette, 300);
 $accent: mat.define-palette($accent-palette, 700);
 $warn: mat.define-palette(mat.$red-palette);
